@@ -48,6 +48,7 @@ defaults = dict(
   WHISPER_SPARSE_CREATE=False,
   WHISPER_FALLOCATE_CREATE=False,
   WHISPER_LOCK_WRITES=False,
+  WHISPER_CACHE_HEADERS=False,
   MAX_DATAPOINTS_PER_MESSAGE=500,
   MAX_AGGREGATION_INTERVALS=5,
   MAX_QUEUE_SIZE=1000,
@@ -235,6 +236,10 @@ class CarbonCacheOptions(usage.Options):
         if settings.WHISPER_AUTOFLUSH:
             log.msg("Enabling Whisper autoflush")
             whisper.AUTOFLUSH = True
+
+        if settings.WHISPER_CACHE_HEADERS:
+            log.msg("Enabling Whisper chache headers")
+            whisper.CACHE_HEADERS = True
 
         if settings.WHISPER_FALLOCATE_CREATE:
             if whisper.CAN_FALLOCATE:

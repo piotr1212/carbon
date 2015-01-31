@@ -129,6 +129,14 @@ CACHE_WRITE_STRATEGY = sorted
 # shift the onus of buffering writes from the kernel into carbon's cache.
 WHISPER_AUTOFLUSH = False
 
+# By default whisper reads the headers of a .wsp file before every update.
+# Enabling this option will cause whisper to cache the headers after the first
+# update, this can save three read operations for every succeeding update.
+# Enabling can cause corrupt .wsp files when changing the headers of a file
+# while carbon is running. Headers change when whisper-resize or
+# whisper-set-aggregation is run.
+# WHISPER_CACHE_HEADERS = False
+
 # By default new Whisper files are created pre-allocated with the data region
 # filled with zeros to prevent fragmentation and speed up contiguous reads and
 # writes (which are common). Enabling this option will cause Whisper to create
