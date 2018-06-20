@@ -52,6 +52,15 @@ class CarbonService(service.Service):
         carbon_sock = tmp_port.createInternetSocket()
         if hasattr(socket, 'SO_REUSEPORT'):
             carbon_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+        # Enable tcp_keepalive to detect broken connections earlier
+        if hasattr(socket, 'SO_KEEPALIVE'):
+            carbon_sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+        # Linux/BSD: lower time after which keepalives are sent to 900 seconds
+        if hasattr(socket, 'TCP_KEEPIDLE'):
+            carbon_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 900)
+        # osx: lower time after which keepalives are sent to 900 seconds
+        if hasattr(socket, 'TCP_KEEPALIVE'):
+            carbon_sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPALIVE, 900)
         carbon_sock.bind((self.interface, self.port))
 
         if hasattr(self.protocol, 'datagramReceived'):
