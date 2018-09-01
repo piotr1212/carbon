@@ -37,6 +37,12 @@ matrix:
 env:
   - TOXENV=py27
   - TOXENV=py27-pyhash
+  - TOXENV=py27-twisted13
+  - TOXENV=py27-twisted14
+  - TOXENV=py27-twisted15
+  - TOXENV=py27-twisted16
+  - TOXENV=py27-twisted17
+  - TOXENV=py27-twisted18
   - TOXENV=lint
 
 before_install:
