@@ -100,15 +100,20 @@ class SortedStrategy(DrainStrategy):
 
     def _generate_queue():
       while True:
-        t = time.time()
-        metric_counts = sorted(self.cache.counts, key=lambda x: x[1])
-        size = len(metric_counts)
-        if settings.LOG_CACHE_QUEUE_SORTS and size:
-          log.msg("Sorted %d cache queues in %.6f seconds" % (size, time.time() - t))
-        while metric_counts:
-          yield itemgetter(0)(metric_counts.pop())
-        if settings.LOG_CACHE_QUEUE_SORTS and size:
-          log.msg("Queue consumed in %.6f seconds" % (time.time() - t))
+        # Try/except block is to debug
+        # https://github.com/graphite-project/carbon/issues/815
+        try:
+          t = time.time()
+          metric_counts = sorted(self.cache.counts, key=lambda x: x[1])
+          size = len(metric_counts)
+          if settings.LOG_CACHE_QUEUE_SORTS and size:
+            log.msg("Sorted %d cache queues in %.6f seconds" % (size, time.time() - t))
+          while metric_counts:
+            yield itemgetter(0)(metric_counts.pop())
+          if settings.LOG_CACHE_QUEUE_SORTS and size:
+            log.msg("Queue consumed in %.6f seconds" % (time.time() - t))
+        except Exception as exc:
+          log.err(exc)
 
     self.queue = _generate_queue()
 
